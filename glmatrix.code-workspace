@@ -1,0 +1,163 @@
+{
+    "folders": [
+        { "path": ".", "name": "glmatrix" }
+    ],
+
+    "settings": {
+        "editor.detectIndentation":     false,
+        "editor.tabSize":               4,      // Note: only active if editor.-
+        "editor.insertSpaces":          true,   //       detectIndentation is false!
+        //"editor.trimAutoWhitespace":    true,
+        "files.trimTrailingWhitespace": true,
+
+        // Leave big brother in the dark, mainly settings from @tag:usesOnlineServices
+        "telemetry.enableTelemetry": false,
+        "telemetry.enableCrashReporter": false,
+        "workbench.enableExperiments": false,
+        "workbench.settings.enableNaturalLanguageSearch": false,
+        "npm.fetchOnlinePackageInfo": false,
+
+        // Exclude files and folders from explorer (it automatically excludes .git)
+        "files.exclude": {
+            ".ackrc": true,          // config file for ack(1p)
+            ".gitattributes": true,  // git config
+            //".gitignore": true,      // git config
+            ".vscode-cache": true,   // Intellisense cache
+            "**/*~": true,            // backup files
+            ".vstags": true,
+            "core": true             // Core dumps
+        },
+        // Exclude things from search (this automatically uses files.exclude + what you add here)
+        "search.exclude": {
+            "output": true,
+            "tmp": true,
+            "build": true
+        },
+        // Exclude some things from the files watcher
+        "files.watcherExclude": {
+            "**/.git/objects/**": true,
+            "**/.git/refs/**": true,
+            "**/.git/logs/**": true,
+            "**/.git/subtree-cache/**": true,
+            "**/.git/worktrees/**": true,
+            "**/.vscode-cache": true,
+            "**/output/**": true,
+            "**/build/**": true,
+        },
+
+        // Microsoft C++ extension (ms-vscode.cpptools)
+        "C_Cpp.intelliSenseCachePath": "${workspaceFolder}/.vscode-cache",
+        // defaults for .vscode/c_cpp_properties.json (which makes that file optional)
+        // see .vscode/c_cpp_properties.json-example for details
+        // https://code.visualstudio.com/docs/cpp/customize-default-settings-cpp,
+        // https://code.visualstudio.com/docs/cpp/c-cpp-properties-schema-reference)
+        "C_Cpp.default.includePath":           [ "${workspaceFolder}/**" ], // do no add more here, it confuses IntelliSense
+        // no defines required, it should use gen/make_defines.h and std_build.h
+        "C_Cpp.default.defines":               [ ],
+        //"C_Cpp.default.compileCommands":       "",
+        //"C_Cpp.default.forcedIncludes":      [ ],
+        "C_Cpp.default.intelliSenseMode":        "gcc-x64",
+         "C_Cpp.default.compilerPath":            "/usr/bin/gcc",
+        "C_Cpp.default.cStandard":               "gnu99",
+        "C_Cpp.default.cppStandard":             "gnu++17",
+        "C_Cpp.default.browse.path":           [ "${workspaceFolder}/**" ],
+        //"C_Cpp.default.configurationProvider": "b2.catkin_tools",
+        "C_Cpp.default.browse.databaseFilename": "${workspaceFolder}/.vscode-cache/browse.db",
+        "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": true,
+        //"C_Cpp.clang_format_style": "{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 120 }",
+        "editor.formatOnSave": false,
+
+        // Help VSCode to recognise some unusually named files correctly
+        "files.associations": {
+        },
+
+        // Automatically detected tasks (e.g. for .c files) won't work for us
+        "task.autoDetect": "off",
+        "typescript.tsc.autoDetect": "off",
+        "grunt.autoDetect": "off",
+        "gulp.autoDetect": "off",
+        "jake.autoDetect": "off",
+        "npm.autoDetect": "off",
+        "cSpell.words": [ ],
+        "cmake.configureOnOpen": false
+    },
+
+    // Essential recommended and not recommended extensions. See the wiki for more.
+    "extensions": {
+        "recommendations": [
+            "ms-vscode.cpptools",
+            "mhutchie.git-graph",
+            "eamodio.gitlens"
+        ],
+        "unwantedRecommendations": [
+            "austin.code-gnu-global", // conflicts with "ms-vscode.cpptools" (?)
+        ]
+    },
+
+    // Build and test tasks. Users can add more tasks in .vscode/tasks.json.
+    "tasks": {
+        // https://code.visualstudio.com/docs/editor/tasks
+        // https://code.visualstudio.com/docs/editor/tasks-appendix
+        "version": "2.0.0",
+
+        // Defaults for all tasks
+        "options": {
+            "cwd": "${workspaceFolder}",
+            "shell": { "executable": "/bin/bash", "args": [ "-c" ] },
+            "setupCommands": [
+                { "text": "-enable-pretty-printing", "description": "enable pretty printing", "ignoreFailures": true },
+                { "text": "handle SIGPIPE nostop noprint pass", "description": "ignore SIGPIPE", "ignoreFailures": true }
+            ]
+        },
+        "problemMatcher": "$gcc",
+        "type": "shell",
+
+        // Tasks definitions
+        "tasks": [
+            // -----------------------------------------------------------------------------------------
+            {
+                "label": "make glmatrix",
+                "group": "build",
+                "command": "make", "args": [ "glmatrix" ]
+            },
+            {
+                "label": "debug workspaceFolder path",
+                "group": "build",
+                "command": "echo ${workspaceFolder} && readlink -f ${workspaceFolder}"
+            }
+        ],
+
+        // Input variables
+        "inputs": [
+            // https://code.visualstudio.com/docs/editor/variables-reference#_input-variables
+        ]
+    },
+    // Launch (debugging)
+    "launch": {
+        // https://code.visualstudio.com/docs/cpp/launch-json-reference
+        "configurations": [
+            {
+                "name": "debug glmatrix",
+                "type": "cppdbg", "request": "launch", "MIMode": "gdb", "miDebuggerPath" : "gdb",
+                "stopAtEntry": false,
+                "preLaunchTask" : "make glmatrix",
+                "program": "${workspaceFolder}/glmatrix",
+                "args": [ ],
+                "cwd": "${workspaceFolder}",
+                "setupCommands": [
+                    { "text": "-enable-pretty-printing", "description": "enable pretty printing", "ignoreFailures": true },
+                    { "text": "handle SIGPIPE nostop noprint pass", "description": "ignore SIGPIPE", "ignoreFailures": true },
+                    //{ "text": "add-natvis ${workspaceFolder}/3rdparty/imgui/imgui.natvis", "description": "imgui natvis", "ignoreFailures": true }
+                    // "-exec info skip" to show in debug console
+                    //{ "text": "skip -rfunction Im(Vec2|Vec4|Strv|Vector|Span)::.+", "description": "skip trivial ImGui functions", "ignoreFailures": true },
+                    //{ "text": "skip -rfunction Ff::Vec2::.+", "description": "skip trivial Ff functions", "ignoreFailures": true },
+                    // https://sourceware.org/gdb/onlinedocs/gdb/Skipping-Over-Functions-and-Files.html
+                    // FIXME: doesn't work :-(
+                    { "text": "skip -rfunction ^std::__cxx11::(allocator|basic_string)<.*>::", "description": "skip string ctor/dtor", "ignoreFailures": true },
+                    { "text": "skip -rfunction ^std::__cxx11::([a-zA-z0-9_]+)<.*>::", "description": "skip std ctor/dtor", "ignoreFailures": true },
+                ]
+            }
+        ],
+        "compounds": []
+    }
+}
