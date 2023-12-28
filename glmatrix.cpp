@@ -147,7 +147,7 @@ struct Consts
 
 /* ****************************************************************************************************************** */
 
-// A glyphs to render
+// A glyph to render
 struct Glyph
 {
     Glyph(const glm::vec3 &_pos, const int _glyph, const float _bright);
@@ -372,7 +372,7 @@ GlMatrixRenderer::GlMatrixRenderer(const GlMatrix::Options &options) :
         glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &fragmentSuccess);
         if (fragmentSuccess != GL_TRUE)
         {
-            WARNING("Failed compiling vertex shader");
+            WARNING("Failed compiling fragment shader");
         }
 
         // Link shader program
